@@ -13,7 +13,19 @@ dotenv.config({  //important
     path:'./env'
 })
 
-connectDB()
+connectDB().then(()=>{
+ // now will use the app.listen to start the server, till now only mongodb is connected  //4
+    app.listen(process.env.PORT || 8000,()=>{
+        console.log(`Server is running at : ${process.env.PORT}`)
+    });
+    // to handle the error 
+    app.on("error",(error)=>{
+        console.log("ERROR: ",error);
+        throw error
+    })
+}).catch((err)=>{
+    console.log("MONGO db connection failed !!!",err);
+})
 
 
 
