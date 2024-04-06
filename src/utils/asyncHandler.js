@@ -2,7 +2,7 @@
 // THE FUNCTION CAN BE CREATED USING TWO WAYS
 //1 USING PROMISE //2 USING TRY AND CATCH
 const asyncHandler = (requestHandler)=>{
-    (req,res,next)=>{
+   return (req,res,next)=>{
         Promise.resolve(requestHandler(req,res,next)).catch((error)=>next(error))
     }
 }

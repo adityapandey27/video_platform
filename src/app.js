@@ -9,7 +9,7 @@ import cookieParser from "cookie-parser"
 const app=express();
 
 //5
-app.user(cors({
+app.use(cors({
     origin : process.env.CORS_ORIGIN,
     credentials:true
 }))
@@ -26,4 +26,14 @@ app.use(express.static("public"))
 //cookie parser to access user browser cookies and set also (CRUD) from our server
 app.use(cookieParser());
 
+
+//04-04-2024
+//routes import
+import userRouter from "./routes/user.router.js"
+
+
+//routes decelration
+// app.use("/users",userRouter)
+//changing the above to version
+app.use("/api/v1/users",userRouter);
 export {app}

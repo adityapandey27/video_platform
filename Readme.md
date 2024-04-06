@@ -138,6 +138,69 @@ REFERESH_TOKEN_EXPIRY=10d
 - We do not store access token in database but store referesh,
 - REFRESH and ACCESS token will be written same way
 
+-----------------------------------------------------------------------------------
+6. UPLOADING FILES:  Cloudinary.com and multer or express-fileupload
+- Installing two: 1. npm install cloudinary and npm i multer
+a. Cloudinary: 
+    step 1: will make user upload the life using multer
+    step 2: with the help of multer we will take that file and store temprairly on our server.
+    step 3: with the help of cloudinary will take that file and upload it
+    step 4: after uploading need to delete the file again
+
+7. creating a middleware : Using multer
+- jahan jahan file uploading capabilty ki zarurat hogi jahan enject kr denge
+- middlewares > multer.middleware.js
+
+---------------------------------------------------------------------------
+04/04/2024
+- Complete guide for router and controller with debugging:
+- In user.controller file add the basic code which will send the req, res to the middleware
+- To handle the router for user created user.router.js file
+- now import the routes in app.js file after the middle wares and declare the routes
+- ab router hum direct use nahi kr sakte jese pehle krte the router.get
+ kyo ki ab humne router dusre file me shift kr diye hai isliye, ab ek middleware ki help se wahan tk execution hand over krna padega
+ app.use("/users",userRouter), ab jese hi koi /users likhega to hum controll userRoutes ko de denge
+
+ // user.router.js
+ import {Router} from "express";
+
+const router = Router()
+
+export default router;
+
+-----------after
+import {Router} from "express";
+import { registerUser } from "../controllers/user.controller.js";
+
+const router = Router()
+
+
+router.route("/register").post(registerUser)
+export default router;
+
+//now from here it will go to controller file of user.controller.js
+
+// in case we are getting some file, so need to store them using multer
+import the multer upload function defined over ther in user.router
+- before : router.route("/register").post(registerUser)
+- after : router.route("/register").post(
+    upload.fields([
+        {
+            name:"avatar",
+            maxCount:1
+        },
+        {
+            name:"CoverImage",
+            maxCount:1
+        }]),
+    registerUser
+    )
+
+    middle ware adds some fields in our req body
+
+
+
+
 
 
 

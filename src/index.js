@@ -3,14 +3,14 @@
 //3.1
 import dotenv from "dotenv"
 
-import mongoose from "mongoose";  //1
-import { DB_NAME } from "./constants.js"; //1
+// import mongoose from "mongoose";  //1
+// import { DB_NAME } from "./constants.js"; //1
 
 //3.1 
 import connectDB from "./db/index.js";
-
+import {app} from "./app.js"
 dotenv.config({  //important
-    path:'./env'
+    path:'./.env'
 })
 
 connectDB().then(()=>{
