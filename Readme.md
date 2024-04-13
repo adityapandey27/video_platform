@@ -205,6 +205,16 @@ a. AT: are short lived and RT are long lived.
  We store RT in our data base and often we match it.
 
 
+-------------------------------------------------------------------------------------------------
+13-04-2024
+- Refresh token and Access Token: bar bar user ko apna email and pass use na krna pade
+a.AT: is short lived for ex 1 day, after one day user have to do login again. But FB proposed to store two type of tokens AT and RT.
+    - AT which will be hold by user to do his continous work
+    - RT  which will be stored in DB as well, now suppose user ka AT ke time up hogaya hai toh uske pass 401 request aati hai, now frontend wala user 401 get krne pe ek aur url hit kr skta hai, jahan se uska AT refersh hojayega yani naya AT mil jayega
+    - Uss url ke request me backend in RT aayega aur usko DB se match krke sesion waps start kr denge
+    
+
+
 
 
 
