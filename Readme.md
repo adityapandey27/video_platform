@@ -198,6 +198,12 @@ import the multer upload function defined over ther in user.router
 
     middle ware adds some fields in our req body
 
+- Referesh token and Access Token: Both are almost same, but the difference lise in there expiry time.
+a. AT: are short lived and RT are long lived.
+ - Agr aapke pas AT hai, toh kisi feature me agr long term ke liye access chahiye to wo isse hota hai.
+ - RT: now we give access using AT, but after that we ask the user to heat a url, where we check the R token which they have and match it with the RT stored in out database.
+ We store RT in our data base and often we match it.
+
 
 
 
