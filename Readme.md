@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 1.  To store image : We ask to upload the image and store it temprairly on server in case any connection gets lost, but can direclty push on 3rd party platform.
 2.  folder in src : mkdir controllers cd middlewares models routes utils
 3.  add "Prettier" to project from npm to aviod the lots of conflicts
@@ -230,4 +231,6 @@ Date: 21/04/2024 (Understand The Subscription Schema)
 
 
 
+=======
+>>>>>>> 83f8606713baf6c8496f5ea6dcd27604f133070e
 
