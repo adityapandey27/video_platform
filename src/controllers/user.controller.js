@@ -6,7 +6,6 @@ import { ApiResponse } from "../utils/ApiResponse.js"
 import jwt from "jsonwebtoken"
 const registerUser= asyncHandler(
     async(req,res)=>{
-        console.log("I am hereeeeeeeeeeeeeeee")
 
         // res.status(200).json({
         //     message:"Ok"
@@ -33,7 +32,6 @@ const registerUser= asyncHandler(
             throw new ApiError(400,"All fields are required")
         }
 
-        console.log("email",email);
 
         const existedUser = await User.findOne({
             $or: [{ username }, { email }]
@@ -45,15 +43,22 @@ const registerUser= asyncHandler(
         }
 
         // the below files key added by multer middleware
-        const avatarLocalPath=req.files?.avatar[0]?.path
-        const converImageLocalPath=req.files?.coverImage[0]?.path;
+        //console.log(req.files);
+
+    const avatarLocalPath = req.files?.avatar[0]?.path;
+    //const coverImageLocalPath = req.files?.coverImage[0]?.path;
+
+    let coverImageLocalPath;
+    if (req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length > 0) {
+        coverImageLocalPath = req.files.coverImage[0].path
+    }
 
         if(!avatarLocalPath)
         {
             throw new ApiError(400,"Avatar file is required");
         }
        const avatar=await uploadOnCloudniary(avatarLocalPath)
-       const coverImage= await uploadOnCloudniary(converImageLocalPath)
+       const coverImage= await uploadOnCloudniary(coverImageLocalPath)
 
        if(!avatar)
        {
@@ -80,7 +85,7 @@ const registerUser= asyncHandler(
     }
 )
 
-export const loginUser= asyncHandler(async(req,res)=>{
+const loginUser= asyncHandler(async(req,res)=>{
     // get the username/ email+ get passowrd,
     // check if email is present or not.
     // checkout password.
@@ -102,7 +107,7 @@ export const loginUser= asyncHandler(async(req,res)=>{
     {
         return new ApiError(404,"User does not exist");
     }
-
+    
     const isPasswordValid=await user.isPasswordCorrect(password)
     if(!isPasswordValid){
         throw new ApiError(401,"Invalid user credentail");
@@ -137,7 +142,7 @@ export const loginUser= asyncHandler(async(req,res)=>{
 
 })
 
-export const logoutUser= asyncHandler(async(req,res)=>{
+const logoutUser= asyncHandler(async(req,res)=>{
     //to logout the user first need to clear the cookies and need to remove the refreshToken
     //for logout purpose we do not take cred, so how we gonna do logout
     //we are going to create a middle ware for these purpose
@@ -356,7 +361,130 @@ const updateUserCoverImage = asyncHandler(async(req, res) => {
         new ApiResponse(200, user, "Cover image updated successfully")
     )
 })
+const getUserChannelProfile = asyncHandler(async (req,res)=>{
+    const {username}=req.params;
 
+    if(!username?.trim()){
+        throw new ApiError(400,"username is missing");
+    }
+    const channel = await User.aggregate([
+        {
+            $match: {
+                username: username?.toLowerCase()
+            }
+        },
+        {
+            $lookup: {
+                from: "subscriptions",
+                localField: "_id",
+                foreignField: "channel",
+                as: "subscribers"
+            }
+        },
+        {
+            $lookup: {
+                from: "subscriptions",
+                localField: "_id",
+                foreignField: "subscriber",
+                as: "subscribedTo"
+            }
+        },
+        {
+            $addFields: {
+                subscribersCount: {
+                    $size: "$subscribers"
+                },
+                channelsSubscribedToCount: {
+                    $size: "$subscribedTo"
+                },
+                isSubscribed: {
+                    $cond: {
+                        if: {$in: [req.user?._id, "$subscribers.subscriber"]},
+                        then: true,
+                        else: false
+                    }
+                }
+            }
+        },
+        {
+            $project: {
+                fullName: 1,
+                username: 1,
+                subscribersCount: 1,
+                channelsSubscribedToCount: 1,
+                isSubscribed: 1,
+                avatar: 1,
+                coverImage: 1,
+                email: 1
+
+            }
+        }
+    ])
+
+    if (!channel?.length) {
+        throw new ApiError(404, "channel does not exists")
+    }
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(200, channel[0], "User channel fetched successfully")
+    )
+})
+
+const getWatchHistory = asyncHandler(async(req, res) => {
+    const user = await User.aggregate([
+        {
+            $match: {
+                _id: new mongoose.Types.ObjectId(req.user._id)
+            }
+        },
+        {
+            $lookup: {
+                from: "videos",
+                localField: "watchHistory",
+                foreignField: "_id",
+                as: "watchHistory",
+                pipeline: [
+                    {
+                        $lookup: {
+                            from: "users",
+                            localField: "owner",
+                            foreignField: "_id",
+                            as: "owner",
+                            pipeline: [
+                                {
+                                    $project: {
+                                        fullName: 1,
+                                        username: 1,
+                                        avatar: 1
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        $addFields:{
+                            owner:{
+                                $first: "$owner"
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    ])
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(
+            200,
+            user[0].watchHistory,
+            "Watch history fetched successfully"
+        )
+    )
+})
 export {
     registerUser,
     loginUser,
@@ -366,5 +494,7 @@ export {
     getCurrentUser,
     updateAccountDetails,
     updateUserAvatar,
-    updateUserCoverImage
+    updateUserCoverImage,
+    getUserChannelProfile,
+    getWatchHistory
 }

@@ -1,6 +1,7 @@
 import multer from "multer"
 
 const storage = multer.diskStorage({
+  
     destination: function (req, file, cb) {
         // file-> we get all the files, cd-> call back
       cb(null, './public/temp')
@@ -8,8 +9,8 @@ const storage = multer.diskStorage({
     },
     filename: function (req, file, cb) {
       const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
-      cb(null, file.fieldname + '-' + uniqueSuffix)
+      cb(null, file.originalname + '-' + uniqueSuffix)
     }
   })
   
- export const upload = multer({ storage: storage })
+ export const upload = multer({storage })

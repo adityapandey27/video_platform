@@ -68,8 +68,8 @@ userSchema.pre("save", async function (next){  //3
 })
 //bacause it will take some time there for making it async
 
-userSchema.methods.isPasswordCorrect=async function(password){  //3
-   return await bcrypt.compare(password,this.password)
+userSchema.methods.isPasswordCorrect = async function(password){
+    return await bcrypt.compare(password, this.password)
 }
 
 userSchema.methods.generateAccessToken=async function(){  //3

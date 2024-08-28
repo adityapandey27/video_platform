@@ -1,11 +1,14 @@
 import {v2 as cloudinary} from 'cloudinary'; //1
 import fs from "fs";  //2
+import dotenv from "dotenv"
+dotenv.config({  //important
+  path:'./.env'
+})
 cloudinary.config({ //2
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY, 
   api_secret: process.env.CLOUDINARY_API_SECRET, 
 });
-
 const uploadOnCloudniary= async (localFilePath)=>{
   try{
     if(!localFilePath){
@@ -17,9 +20,9 @@ const uploadOnCloudniary= async (localFilePath)=>{
       resource_type: "auto"   //kon sa resource uplaod kr rahe hai
     })
     //file has been uploaded successfully
-    console.log("file is uploaded on cloudniary",response.url);
 
     //upload krne ke baad url get krne ke liye
+    fs.unlinkSync(localFilePath)
     return response;
   }catch(error){
     // let if file not got uploaded nut we know the file is on our server and we 

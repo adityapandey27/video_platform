@@ -8,7 +8,7 @@
     a. for time being storin DB name : DB_NAME
 6.  There are two ways using which we can do data base connectivity
     a. firstely index file gets executed by node/nodemon, so we can write db connection funtion here only
-    b. can create db file, write function here then call in index and then execute (learner about process.exit)
+    b. can create db file, write function here then call in index and then execute (learne about process.exit)
 
             install mongoose, express and dotenv
             a. index.js
@@ -44,7 +44,7 @@
 
                 //1 // in last executed code, editor might have not put the semi at end there for we always put one from our sid.
 
-            b. creat ne folder DB and index file
+            b. creat new folder DB and index file
             
 
 
@@ -60,8 +60,12 @@ connectDB().then(()=>{
     console.log("MONGO db connection failed",error);
 })
 
-8. when ever using middleware user app.user(cros());
+8. when ever using middleware user app.user(cors());
 - packages to install : a. cookie-parser  b. cors
+
+
+  - cors:If your frontend is hosted on a different domain than your backend and you try to make an API request from the frontend to the backend, the browser, by default, will block the request. This is due to the same-origin policy implemented by browsers for security reasons.
+
 
 9. configuring cros in app.js
 10. writing other setting to make security strong.
@@ -212,6 +216,9 @@ a.AT: is short lived for ex 1 day, after one day user have to do login again. Bu
     - AT which will be hold by user to do his continous work
     - RT  which will be stored in DB as well, now suppose user ka AT ke time up hogaya hai toh uske pass 401 request aati hai, now frontend wala user 401 get krne pe ek aur url hit kr skta hai, jahan se uska AT refersh hojayega yani naya AT mil jayega
     - Uss url ke request me backend in RT aayega aur usko DB se match krke sesion waps start kr denge
+
+--------------------------------------------------------------------------------------
+Date: 21/04/2024 (Understand The Subscription Schema)    
     
 
 
